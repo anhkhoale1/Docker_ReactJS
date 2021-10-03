@@ -1,0 +1,43 @@
+#This is the newest version of Docker compose
+version: "3.9"
+#Services means containers
+services:
+  #mongoapp is mongo container, database side
+  mongoapp:
+    #pull image mongo version 4.2.8
+    image: mongo:4.2.8
+    #restart: unless-stopped work as expected
+    restart: always
+    #run mongoapp at port 27017
+    ports:
+      - "27017"
+    #variables env with the name's database, username and psswd of root
+    environment:
+    #these variables is declared on .env file
+      - MONGO_INITDB_DATABASE: "${DATABASE}"
+      - MONGO_INITDB_ROOT_USERNAME: "${ROOT_USERNAME}"
+      - MONGO_INITDB_ROOT_PASSWORD: "${ROOT_PASSWORD}"
+  #nodeapp is node container, api side
+  nodeapp:
+    #pull node from node folder
+    build: ./node
+    #ports of our machine:port of container in docker
+    ports:
+      - "8000:8000"
+    #restart: unless-stopped work as expected
+    restart: always
+    #this container depends on mongoapp container
+    depends_on:
+      - "mongoapp"
+  #reactapp is react container, front side
+  reactapp:
+    #pull react from react-app
+    build: ./react-app
+    #ports of our machine:port of container in docker
+    ports:
+      - "4301:3000"
+    #restart: unless-stopped work as expected
+    restart: always
+    #this container dependsd on nodeapp container
+    depends_on:
+      - "nodeapp"
