@@ -1,4 +1,4 @@
-## DOCKERIZE REACTJS 5
+## DOCKERIZE REACTJS AND MONGODB
 
 ## Installation of the project
 
